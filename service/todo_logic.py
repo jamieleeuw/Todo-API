@@ -1,15 +1,19 @@
+def _to_positive_int(value):
+    value = value.strip()
+    if value.isdigit():
+        value = int(value)
+        if value > 0:
+            return value
+    return False
+
 def input_(choice):
-    if choice.isdigit() == True:
-        choice = int(choice)
-        return choice
-    else:
-        return False
+    return _to_positive_int(choice)
 
 def user_id(userid):
-    if userid.isdigit() == True:
-        userid = int(userid)
-        return userid
-    else:
-        return False
+    return _to_positive_int(userid)
 
-    
+def validate_title(title):
+    title = title.strip()
+    if title:
+        return title
+    return False

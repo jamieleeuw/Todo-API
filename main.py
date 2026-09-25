@@ -41,20 +41,35 @@ def menu():
                 print(f'Todo #{user_choice} doesnt exist please create a todo first')
         elif choice == 3:
             user_choice = input("What userID are you looking for: ")
-            task = db.get_user_todo(logic.user_id(user_choice))
-            for todo in task:
-                if type(todo) is tuple:
+            user_id = logic.user_id(user_choice)
+
+            if user_id is False:
+                print("Only ENter Valid Numbers!!!")
+                continue
+
+            existing_user = db.get_user_by_id(user_id)
+            if not existing_user:
+                print(f"UserID {user_id} doesn't exist, let's create one")
+                name = input('Whats your name: ')
+                surname = input('Whats your surname: ')
+                new_id = db.create_user(name, surname)
+                if new_id:
+                    print(f'User created with userId {new_id}!! add a TODO with that userID')
+                continue
+
+            tasks = db.get_user_todo(user_id)
+            if not tasks:
+                print(f"UserID {user_id} exisst but has no todos yet. ")
+            else:
+                for todo in tasks:
                     print(f"ID #{todo[0]}")
                     print(f"title: {todo[1]}")
                     print(f"complete: {todo[2]}")
-                else:
-                    print(f"UserID {user_choice} doesn't exist, let's create one")
-                    name = input('Whats your name: ')
-                    surname = input('Whats your surname: ')
-                    new_id = db.create_user(name, surname)
-                    print(f'User created with userId {new_id}!! add a TODO with that userID')
         elif choice == 4:
            title = input('What should the Todo be: ').lower()
+           if not title.strip():
+               print("Only Enter a Valid Title!!")
+               continue
            user_choice = input('What is your userID: ')
            user_id = logic.user_id(user_choice)
  
@@ -88,6 +103,10 @@ def menu():
                continue
  
            title = input('What should the Todo be: ').lower()
+           if not title.strip():
+               print("Only Enter A Valid Title!!")
+               continue
+           
            if db.update_todo(id, title, existing[2]):
                 print('Task Updated!!!')
         elif choice == 6:
